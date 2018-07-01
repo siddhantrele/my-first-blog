@@ -9,7 +9,7 @@
             by {{post.author}}
           </p>
           <p><span class="glyphicon glyphicon-time"></span> Posted on {{post.published_date}}</p>
-          <p>{{ post.text|linebreaks }}</p>
+          <p>{{ post.text|linebreaks|truncatechars:255 }}</p>
           <a class="btn btn-default" href="{% url 'post_detail' pk=post.pk %}">Read More</a>
 
           <hr>
