@@ -8,12 +8,13 @@ from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 
 def post_list(request):
-    posts = Post.objects.order_by('-created_date')
+    posts = Post.objects.exclude(published_date__isnull=True).order_by('-created_date')
     return render(request, 'blog/post_list.html', {'posts': posts})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/post_detail.html', {'post': post})
+    form = CommentForm()
+    return render(request, 'blog/post_detail.html', {'post': post,'form':form})
 
 @login_required
 def post_new(request):
@@ -26,6 +27,7 @@ def post_new(request):
           #  post.published_date = timezone.now()
             post.save()
             return redirect('post_detail', pk=post.pk)
+
      else:
          form = PostForm()
      return render(request, 'blog/post_edit.html', {'form': form})
@@ -69,8 +71,17 @@ def add_comment_to_post(request, pk):
          if form.is_valid():
              comment = form.save(commit=False)
              comment.post = post
+             if request.user is not None:
+                comment.author=request.user
+             else:
+                comment.author='Anonymous'
+             #print(request.user.is_superuser)
+             if request.user.is_superuser:
+                comment.approved_comment=True
              comment.save()
              return redirect('blog.views.post_detail', pk=post.pk)
+         else:
+            print('Comment is missing some value!')
      else:
          form = CommentForm()
      return render(request, 'blog/add_comment_to_post.html', {'form': form})
