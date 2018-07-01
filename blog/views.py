@@ -30,7 +30,7 @@ def post_new(request):
 
      else:
          form = PostForm()
-     return render(request, 'blog/post_edit.html', {'form': form})
+     return render(request, 'blog/post_edit.html', {'form': form,'new': True})
 
 @login_required
 def post_edit(request, pk):
@@ -45,7 +45,7 @@ def post_edit(request, pk):
              return redirect('post_detail', pk=post.pk)
      else:
          form = PostForm(instance=post)
-     return render(request, 'blog/post_edit.html', {'form': form})
+     return render(request, 'blog/post_edit.html', {'form': form,'edit':True,'post':post})
 
 @login_required
 def post_draft_list(request):

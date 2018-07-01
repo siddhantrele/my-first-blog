@@ -1,9 +1,17 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
+	{% if new %}
     <h1>Add a new post</h1>
     <form action="{% url 'post_new' %}" method="POST" class="newpost-form">{% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary">Post</button>
     </form>
+    {% else %}
+    <h1>Edit Post</h1>
+    <form action="{% url 'post_edit' pk=post.pk %}" method="POST" class="newpost-form">{% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Post</button>
+    </form>
+    {% endif %}
 {% endblock %}
