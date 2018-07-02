@@ -1,18 +1,38 @@
 {% extends 'blog/base.html' %}
-
+{% load staticfiles %}
+{% block header %}
+    <!-- Page Header -->
+    <header class="masthead" style="background-image:  url({% static 'img/home-bg.jpg' %})">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="site-heading">
+              <h1>Siddhant's Django Blog</h1>
+              <span class="subheading">Teaching myself to tango with Django</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+{% endblock %}
 {% block content %}
     {% for post in posts %}
+    <div class="post-preview">
+      <a href="{% url 'post_detail' pk=post.pk %}">
           <h2 class="post-title">
-            <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+          {{ post.title }}
           </h2>
-          <p class="lead">
-            by {{post.author}}
-          </p>
-          <p><span class="glyphicon glyphicon-time"></span> Posted on {{post.published_date}}</p>
-          <p>{{ post.text|linebreaks|truncatechars:255 }}</p>
-          <a class="btn btn-default" href="{% url 'post_detail' pk=post.pk %}">Read More</a>
-
-          <hr>
+          <h3 class="post-subtitle">
+                {{ post.text|linebreaks|truncatechars:50 }}
+          </h3>
+      </a>
+      <p class="post-meta">Posted by
+      <i>{{post.author}}</i>
+      on {{post.published_date}}</p>
+    </div>
+    
+    <hr>
     {% endfor %}
 {% endblock %}
   

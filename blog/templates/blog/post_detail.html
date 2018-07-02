@@ -1,18 +1,46 @@
 {% extends 'blog/base.html' %}
 {% load staticfiles %}
 
+{% block header %}
+    <!-- Page Header -->
+    <header class="masthead">
+      <div class="container">>
+        </div>
+      </div>
+    </header>
+{% endblock %}
+
 {% block content %}
     <h1 class="post-title">{{post.title}}
 
         {% if post.published_date == None %}
-             <a class="btn btn-default pull-right" href="{% url 'blog.views.post_publish' pk=post.pk %}">Publish</a>
+        <li class="list-inline-item pull-right small">
+            <a href="{% url 'blog.views.post_publish' pk=post.pk %}">
+            <span class="fa-stack">
+                    <i class="fa fa-square fa-stack-2x"></i>
+                    <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+            </span></a>
+        </li>
         {% endif %}
         {% if user.is_authenticated and post.author == user %}
-            <a class="btn btn-default pull-right" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-            <a class="btn btn-default pull-right" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <li class="list-inline-item pull-right small">
+            <a href="{% url 'post_remove' pk=post.pk %}">
+            <span class="fa-stack">
+                    <i class="fa fa-square fa-stack-2x"></i>
+                    <i class="fa fa-remove fa-stack-1x fa-inverse"></i>
+            </span></a>
+        </li>
+        <li class="list-inline-item pull-right small">
+            <a href="{% url 'post_edit' pk=post.pk %}">
+            <span class="fa-stack">
+                    <i class="fa fa-square fa-stack-2x"></i>
+                    <i class="fa fa-edit fa-stack-1x fa-inverse"></i>
+            </span></a>
+        </li>
        {% endif %}
     </h1>
-    <p class="lead">
+
+    <p class="post-meta">
             by {{post.author}}
     </p>
 
@@ -20,11 +48,10 @@
 
         {% if post.published_date %}
      <hr>
-            <p><span class="glyphicon glyphicon-time"></span> Posted on {{post.published_date}}</p>
-     <hr>
+            <p><span><i class="fa fa-clock-o"></i></span> Posted on {{post.published_date}}</p>
         {% endif %}
 
-   
+    <hr>
 
         <p>{{ post.text|linebreaks }}</p>
 
@@ -44,15 +71,20 @@
 {% for comment in post.comments.all %}
    {% if user.is_authenticated or comment.approved_comment %}
           <div class="media">
-            <a class="pull-left" href="#">
-              <img class="media-object" src="http://placehold.it/64x64" alt="">
-            </a>
             <div class="media-body">
               <h4 class="media-heading">{{ comment.author }}
-                <small>{{ comment.created_date }}</small>
-                {% if not comment.approved_comment %}
-                <a class="btn btn-default pull-right" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-                <a class="btn btn-default pull-right" href="{% url 'comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+              <small class="pull-right">{{ comment.created_date|date:'d-M-Y H:i' }}</small>
+              {% if not comment.approved_comment %}
+                <a href="{% url 'comment_remove' pk=comment.pk %}">           
+                <span class="fa-stack small pull-right">
+                    <i class="fa fa-square fa-stack-2x"></i>
+                    <i class="fa fa-remove fa-stack-1x fa-inverse"></i>
+                </span></a>
+                <a href="{% url 'comment_approve' pk=comment.pk %}">                
+                <span class="fa-stack small pull-right">
+                    <i class="fa fa-square fa-stack-2x"></i>
+                    <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+                </span></a>
                 {% endif %}
               </h4>
                 {{ comment.text|linebreaks }}
